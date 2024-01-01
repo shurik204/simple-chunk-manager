@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "simple-chunk-manager-lib",
+  "version": "${version}",
+  "name": "SimpleChunkManager",
+  "description": "",
+  "authors": [
+    "shurik204"
+  ],
+  "contact": {
+    "repo": "https://github.com/shurik204/simple-chunk-manager"
+  },
+  "environment": "server",
+  "entrypoints": {},
+  "mixins": [
+    "simple-chunk-manager.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api-base": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

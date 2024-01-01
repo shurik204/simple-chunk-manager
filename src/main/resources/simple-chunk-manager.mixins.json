@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.shurik.simplechunkmanager.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "DistanceManagerAccessor",
+    "ForcedChunksSavedDataMixin",
+    "MinecraftServerMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
