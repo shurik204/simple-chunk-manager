@@ -38,17 +38,32 @@ public class ForcedChunksSavedDataMixin implements ChunkLoadersSavedDataAccessor
 
     @Override
     public boolean addChunkLoader(ChunkLoader<?> chunkLoader) {
-        boolean result = BLOCK_CHUNK_LOADERS.add(chunkLoader);
-        if (result) ((ForcedChunksSavedData) (Object) this).setDirty(true);
-        return result;
+        return scm$markDirtyIfNeeded(BLOCK_CHUNK_LOADERS.add(chunkLoader));
+    }
+
+    @Override
+    public boolean removeChunkLoader(ChunkLoader<?> chunkLoader) {
+        return scm$markDirtyIfNeeded(BLOCK_CHUNK_LOADERS.remove(chunkLoader));
+    }
+
+    @Nullable
+    @Override
+    public ChunkLoader<?> getChunkLoader(String modId, Object owner) {
+        return BLOCK_CHUNK_LOADERS.stream().filter(cl -> cl.getModId().equals(modId) && cl.getChunk().equals(owner)).findFirst().orElse(null);
     }
 
     @Override
     @Nullable
-    public <T extends Comparable<? super T>> ChunkLoader<?> removeChunkLoader(String modId, T owner) {
+    public ChunkLoader<?> removeChunkLoader(String modId, Object owner) {
         ChunkLoader<?> removedChunkLoader = BLOCK_CHUNK_LOADERS.stream().filter(cl -> cl.getModId().equals(modId) && cl.getOwner().equals(owner)).findFirst().orElse(null);
         BLOCK_CHUNK_LOADERS.remove(removedChunkLoader);
         if (removedChunkLoader != null) ((ForcedChunksSavedData) (Object) this).setDirty(true);
         return removedChunkLoader;
+    }
+
+    @Unique
+    private boolean scm$markDirtyIfNeeded(boolean shouldMark) {
+        if (shouldMark) ((ForcedChunksSavedData) (Object) this).setDirty(true);
+        return shouldMark;
     }
 }

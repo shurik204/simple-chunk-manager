@@ -12,6 +12,9 @@ public interface ChunkLoadersSavedDataAccessor {
         return getChunkLoaders().stream().filter(chunkLoader -> chunkLoader.getModId().equals(modId)).collect(Collectors.toSet());
     }
     boolean addChunkLoader(ChunkLoader<?> chunkLoader);
-    @Nullable
-    <T extends Comparable<? super T>> ChunkLoader<?> removeChunkLoader(String modId, T pos);
+
+    @Nullable ChunkLoader<?> getChunkLoader(String modId, Object owner);
+
+    boolean removeChunkLoader(ChunkLoader<?> chunkLoader);
+    @Nullable ChunkLoader<?> removeChunkLoader(String modId, Object owner);
 }

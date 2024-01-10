@@ -3,7 +3,6 @@ package me.shurik.simplechunkmanager.api;
 import me.shurik.simplechunkmanager.impl.access.LevelChunkManagerAccessor;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.Set;
@@ -18,20 +17,12 @@ public interface SimpleChunkManager {
     }
 
     /**
-     * Add chunk loader to {@code world}
-     * @param modId mod ID
-     * @param pos chunk loader position
-     * @return {@code true} if chunk loader was added, {@code false} if chunk loader already exists
-     */
-    boolean addChunkLoaderBlock(String modId, BlockPos pos);
-
-    /**
      * Remove chunk loader from {@code world}
      * @param modId mod ID
-     * @param pos chunk loader position
-     * @return {@code true} if chunk loader was removed, {@code false} otherwise
+     * @param owner chunk loader owner
+     * @return whether chunk loader was removed or not
      */
-    boolean removeChunkLoaderBlock(String modId, BlockPos pos);
+    boolean removeChunkLoader(String modId, Object owner);
 
     /**
      * Remove all chunk loaders for given {@code modId}
@@ -40,8 +31,18 @@ public interface SimpleChunkManager {
 
     /**
      * Remove mod's chunk loader blocks from {@code world}
+     * @return whether any chunk loader was removed or not
      */
-    void removeModChunkLoaderBlocks(String modId);
+    boolean removeModChunkLoaderBlocks(String modId);
+
+    /**
+     * Remove existing chunk loader from {@code world}
+     * @param chunkLoader chunk loader to remove
+     * @return whether chunk loader was removed or not
+     */
+    boolean removeChunkLoader(ChunkLoader<?> chunkLoader);
+
+    ChunkLoader<?> getChunkLoader(String modId, Object owner);
 
     /**
      * Try to submit ticket for given chunk loader

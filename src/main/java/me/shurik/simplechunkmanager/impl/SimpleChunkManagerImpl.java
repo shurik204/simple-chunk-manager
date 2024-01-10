@@ -31,18 +31,20 @@ public class SimpleChunkManagerImpl implements SimpleChunkManager {
 
     public boolean addChunkLoaderBlock(String modId, BlockPos pos) {
         BlockChunkLoader chunkLoader = new BlockChunkLoaderImpl(modId, pos);
-        boolean result = chunkLoadersData.addChunkLoader(chunkLoader);
-        if (result) {
+        if (chunkLoadersData.addChunkLoader(chunkLoader)) {
             // if it was added, load it
             chunkLoader.submitTicket(level);
+            return true;
         }
-        return true;
+        return false;
     }
 
-    public boolean removeChunkLoaderBlock(String modId, BlockPos pos) {
-        ChunkLoader<?> chunkLoader = chunkLoadersData.removeChunkLoader(modId, pos);
+    @Override
+    public boolean removeChunkLoader(String modId, Object owner) {
+        ChunkLoader<?> chunkLoader = chunkLoadersData.removeChunkLoader(modId, owner);
         if (chunkLoader != null) {
-            return chunkLoader.withdrawTicket(level);
+            chunkLoader.withdrawTicket(level);
+            return true;
         }
         return false;
     }
@@ -54,14 +56,28 @@ public class SimpleChunkManagerImpl implements SimpleChunkManager {
     }
 
     @Override
-    public void removeModChunkLoaderBlocks(String modId) {
-        chunkLoadersData.getChunkLoaders().removeIf(chunkLoader -> {
+    public boolean removeModChunkLoaderBlocks(String modId) {
+        return chunkLoadersData.getChunkLoaders().removeIf(chunkLoader -> {
             if (chunkLoader.getModId().equals(modId)) {
                 chunkLoader.withdrawTicket(level);
                 return true;
             }
             return false;
         });
+    }
+
+    @Override
+    public boolean removeChunkLoader(ChunkLoader<?> chunkLoader) {
+        if (chunkLoadersData.removeChunkLoader(chunkLoader)) {
+            chunkLoader.withdrawTicket(level);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public ChunkLoader<?> getChunkLoader(String modId, Object owner) {
+        return chunkLoadersData.getChunkLoader(modId, owner);
     }
 
     public boolean submitTicket(ChunkLoader<?> chunkLoader) {
