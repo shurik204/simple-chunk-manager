@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "simple-chunk-manager-lib",
+  "id": "simple-chunk-manager",
   "version": "${version}",
   "name": "SimpleChunkManager",
   "description": "",
@@ -10,7 +10,7 @@
   "contact": {
     "repo": "https://github.com/shurik204/simple-chunk-manager"
   },
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {},
   "mixins": [
     "simple-chunk-manager.mixins.json"
@@ -19,5 +19,11 @@
     "fabricloader": ">=${loader_version}",
     "fabric-api-base": "*",
     "minecraft": "${minecraft_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [ "library" ],
+      "update_checker": false
+    }
   }
 }

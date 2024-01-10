@@ -1,22 +1,17 @@
 package me.shurik.simplechunkmanager.impl.access;
 
-import me.shurik.simplechunkmanager.api.BlockChunkLoader;
-import me.shurik.simplechunkmanager.impl.BlockChunkLoaderImpl;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import me.shurik.simplechunkmanager.api.ChunkLoader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public interface ChunkLoadersSavedDataAccessor {
-    Set<BlockChunkLoader> getChunkLoaders();
-    Set<BlockChunkLoader> getChunkLoaders(ResourceLocation id);
-    Set<BlockChunkLoader> getChunkLoaders(String namespace);
-    boolean addChunkLoader(BlockChunkLoader chunkLoader);
-    @Nullable
-    BlockChunkLoader removeChunkLoader(BlockChunkLoader chunkLoader);
-    @Nullable
-    default BlockChunkLoader removeChunkLoader(ResourceLocation id, BlockPos pos) {
-        return removeChunkLoader(new BlockChunkLoaderImpl(id, pos));
+    Set<ChunkLoader<?>> getChunkLoaders();
+    default Set<ChunkLoader<?>> getModChunkLoaders(String modId) {
+        return getChunkLoaders().stream().filter(chunkLoader -> chunkLoader.getModId().equals(modId)).collect(Collectors.toSet());
     }
+    boolean addChunkLoader(ChunkLoader<?> chunkLoader);
+    @Nullable
+    <T extends Comparable<? super T>> ChunkLoader<?> removeChunkLoader(String modId, T pos);
 }
