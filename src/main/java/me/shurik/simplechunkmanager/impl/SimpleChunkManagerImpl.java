@@ -47,12 +47,25 @@ public class SimpleChunkManagerImpl implements SimpleChunkManager {
         return false;
     }
 
-    public boolean trySubmitTicket(ChunkLoader<?> chunkLoader) {
-        if (chunkLoader.isLoaded()) return false;
+    @Override
+    public void removeModChunkLoaders(String modId) {
+        // PLACEHOLDER
+        removeModChunkLoaderBlocks(modId);
+    }
 
-        chunkLoader.submitTicket(level);
+    @Override
+    public void removeModChunkLoaderBlocks(String modId) {
+        chunkLoadersData.getChunkLoaders().removeIf(chunkLoader -> {
+            if (chunkLoader.getModId().equals(modId)) {
+                chunkLoader.withdrawTicket(level);
+                return true;
+            }
+            return false;
+        });
+    }
 
-        return true;
+    public boolean submitTicket(ChunkLoader<?> chunkLoader) {
+        return chunkLoader.submitTicket(level);
     }
 
     @Override
@@ -67,7 +80,7 @@ public class SimpleChunkManagerImpl implements SimpleChunkManager {
 
     @Override
     public void submitAllTickets() {
-        chunkLoadersData.getChunkLoaders().forEach(this::trySubmitTicket);
+        chunkLoadersData.getChunkLoaders().forEach(this::submitTicket);
     }
 
     @Override

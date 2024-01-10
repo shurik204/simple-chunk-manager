@@ -45,7 +45,19 @@ public interface ChunkLoader<T extends Comparable<? super T>> extends Comparable
      */
     boolean isLoaded();
 
-    void submitTicket(ServerLevel level) throws IllegalStateException;
+    /**
+     * Submits chunk loader's ticket to {@code world}
+     * @param world level to submit ticket to
+     * @return whether ticket was submitted or not
+     */
+    boolean submitTicket(ServerLevel world);
+
+    /**
+     * Withdraws chunk loader's ticket from {@code world}
+     * @param world level to withdraw ticket from
+     * @return whether ticket was withdrawn or not
+     */
+    boolean withdrawTicket(ServerLevel world);
 
     /**
      * Writes chunk loader data to {@link CompoundTag}
@@ -77,8 +89,6 @@ public interface ChunkLoader<T extends Comparable<? super T>> extends Comparable
         int res = getModId().compareTo(other.getModId());
         return res == 0 ? getOwner().compareTo(other.getOwner()) : res;
     }
-
-    boolean withdrawTicket(ServerLevel level);
 
     enum Type {
         BLOCK

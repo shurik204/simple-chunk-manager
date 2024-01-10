@@ -3,9 +3,11 @@ package me.shurik.simplechunkmanager.impl;
 import me.shurik.simplechunkmanager.api.ChunkLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
 
+@ApiStatus.Internal
 public abstract class ChunkLoaderImpl<T extends Comparable<? super T>> implements ChunkLoader<T> {
     protected static final String ID_KEY = "modId";
     protected static final String TYPE_KEY = "type";

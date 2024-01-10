@@ -34,11 +34,21 @@ public interface SimpleChunkManager {
     boolean removeChunkLoaderBlock(String modId, BlockPos pos);
 
     /**
+     * Remove all chunk loaders for given {@code modId}
+     */
+    void removeModChunkLoaders(String modId);
+
+    /**
+     * Remove mod's chunk loader blocks from {@code world}
+     */
+    void removeModChunkLoaderBlocks(String modId);
+
+    /**
      * Try to submit ticket for given chunk loader
      * @param chunkLoader chunk loader
      * @return whether ticket was submitted or not
      */
-    boolean trySubmitTicket(ChunkLoader<?> chunkLoader);
+    boolean submitTicket(ChunkLoader<?> chunkLoader);
 
     /**
      * @return all chunk loaders

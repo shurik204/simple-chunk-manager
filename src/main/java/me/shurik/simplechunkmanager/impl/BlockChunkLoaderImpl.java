@@ -8,9 +8,11 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.level.ChunkPos;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Comparator;
 
+@ApiStatus.Internal
 public class BlockChunkLoaderImpl extends ChunkLoaderImpl<BlockPos> implements BlockChunkLoader {
     protected static final String BLOCK_POS_KEY = "block";
 
@@ -33,21 +35,24 @@ public class BlockChunkLoaderImpl extends ChunkLoaderImpl<BlockPos> implements B
     }
 
     @Override
-    public void submitTicket(ServerLevel level) throws IllegalStateException {
+    public boolean submitTicket(ServerLevel world) throws IllegalStateException {
         if (loaded) {
-            throw new IllegalStateException("Was asked to submit tickets for " + this + " in world " + level + ", but it already did!");
+            return false;
+//            throw new IllegalStateException("Was asked to submit tickets for " + this + " in world " + level + ", but it already did!");
         } else {
-            level.getChunkSource().addRegionTicket(createTicketType(), getChunk(), 1, this);
+            world.getChunkSource().addRegionTicket(createTicketType(), getChunk(), 1, this);
             loaded = true;
+            return true;
         }
     }
 
     @Override
-    public boolean withdrawTicket(ServerLevel level) {
+    public boolean withdrawTicket(ServerLevel world) {
         if (!loaded) {
-            throw new IllegalStateException("Was asked to withdraw ticket for " + this + " in world " + level + ", but it shouldn't have one!");
+            return false;
+//            SimpleChunkManagerImpl.LOGGER.warning("Was asked to withdraw ticket for " + this + " in world " + level + ", but it shouldn't have one!");
         } else {
-            level.getChunkSource().removeRegionTicket(createTicketType(), getChunk(), 1, this);
+            world.getChunkSource().removeRegionTicket(createTicketType(), getChunk(), 1, this);
             loaded = false;
             return true;
         }
