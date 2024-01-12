@@ -20,10 +20,6 @@ public class BlockChunkLoaderImpl extends ChunkLoaderImpl<BlockPos> implements B
         super(modId, owner, new ChunkPos(owner));
     }
 
-    public static BlockChunkLoader readSaveData(String id, CompoundTag data) {
-        return new BlockChunkLoaderImpl(id, NbtUtils.readBlockPos(data.getCompound(BLOCK_POS_KEY)));
-    }
-
     @Override
     public Type getType() {
         return Type.BLOCK;
@@ -56,5 +52,15 @@ public class BlockChunkLoaderImpl extends ChunkLoaderImpl<BlockPos> implements B
             loaded = false;
             return true;
         }
+    }
+
+    @Override
+    public void writeSaveData(CompoundTag chunkLoaderData) {
+        super.writeSaveData(chunkLoaderData);
+        chunkLoaderData.put(BLOCK_POS_KEY, NbtUtils.writeBlockPos(getOwner()));
+    }
+
+    public static BlockChunkLoader readSaveData(String id, CompoundTag data) {
+        return new BlockChunkLoaderImpl(id, NbtUtils.readBlockPos(data.getCompound(BLOCK_POS_KEY)));
     }
 }

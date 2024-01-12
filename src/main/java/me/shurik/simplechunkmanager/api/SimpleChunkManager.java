@@ -3,7 +3,9 @@ package me.shurik.simplechunkmanager.api;
 import me.shurik.simplechunkmanager.impl.access.LevelChunkManagerAccessor;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -13,8 +15,25 @@ import java.util.Set;
  */
 public interface SimpleChunkManager {
     static SimpleChunkManager of(ServerLevel world) {
-        return ((LevelChunkManagerAccessor) world).scm$getChunkManager();
+        return ((LevelChunkManagerAccessor) world).getChunkManagerInstance();
     }
+
+    /**
+     * Add chunk loader to {@code world}
+     * @param modId mod ID
+     * @param pos block pos
+     * @return whether chunk loader was added or not
+     */
+    boolean addChunkLoaderBlock(String modId, BlockPos pos);
+
+    /**
+     * Get chunk loader for given {@code modId} and {@code owner}
+     * @param modId mod ID
+     * @param owner chunk loader owner
+     * @return chunk loader or null if not found
+     */
+    @Nullable
+    ChunkLoader<?> getChunkLoader(String modId, Object owner);
 
     /**
      * Remove chunk loader from {@code world}
@@ -41,8 +60,6 @@ public interface SimpleChunkManager {
      * @return whether chunk loader was removed or not
      */
     boolean removeChunkLoader(ChunkLoader<?> chunkLoader);
-
-    ChunkLoader<?> getChunkLoader(String modId, Object owner);
 
     /**
      * Try to submit ticket for given chunk loader

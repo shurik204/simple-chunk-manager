@@ -10,15 +10,18 @@
   "contact": {
     "repo": "https://github.com/shurik204/simple-chunk-manager"
   },
-  "environment": "*",
-  "entrypoints": {},
+  "entrypoints": {
+    "main": [
+      "me.shurik.simplechunkmanager.impl.Entrypoint"
+    ]
+  },
   "mixins": [
     "simple-chunk-manager.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api-base": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": ">=${minecraft_version}"
   },
   "custom": {
     "modmenu": {
