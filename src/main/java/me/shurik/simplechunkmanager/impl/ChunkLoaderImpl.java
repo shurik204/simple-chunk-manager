@@ -71,11 +71,10 @@ public abstract class ChunkLoaderImpl<T extends Comparable<? super T>> implement
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj instanceof ChunkLoaderImpl<?> other) {
-            return modId.equals(other.modId) && owner.equals(other.owner);
-        }
-        return false;
+        return this == obj ||
+                obj instanceof ChunkLoader<?> other &&
+                getModId().equals(other.getModId()) &&
+                getOwner().equals(other.getOwner());
     }
 
     @Override

@@ -35,10 +35,9 @@ public interface ChunkLoader<T extends Comparable<? super T>> extends Comparable
     ChunkLoader.Type getType();
 
     /**
-     * Creates and returns ticket type for chunk loader
-     * @return ticket type
+     * @return chunk loader's ticket type
      */
-    TicketType<ChunkLoader<T>> createTicketType();
+    TicketType<ChunkLoader<T>> getTicketType();
 
     /**
      * @return true if chunk loader is loaded (ticket for it was submitted).
@@ -47,14 +46,14 @@ public interface ChunkLoader<T extends Comparable<? super T>> extends Comparable
 
     /**
      * Submits chunk loader's ticket to {@code world}
-     * @param world level to submit ticket to
+     * @param world world to submit ticket to
      * @return whether ticket was submitted or not
      */
     boolean submitTicket(ServerLevel world);
 
     /**
      * Withdraws chunk loader's ticket from {@code world}
-     * @param world level to withdraw ticket from
+     * @param world world to withdraw ticket from
      * @return whether ticket was withdrawn or not
      */
     boolean withdrawTicket(ServerLevel world);

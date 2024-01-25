@@ -14,6 +14,8 @@ import java.util.Comparator;
 
 @ApiStatus.Internal
 public class BlockChunkLoaderImpl extends ChunkLoaderImpl<BlockPos> implements BlockChunkLoader {
+    // Ticket type must be a constant, otherwise comparison (TicketType == other) in Ticket.equals will fail
+    private static final TicketType<ChunkLoader<BlockPos>> TICKET_TYPE = TicketType.create("scm:block_chunk_loader", Comparator.comparing(info -> info));
     protected static final String BLOCK_POS_KEY = "block";
 
     public BlockChunkLoaderImpl(String modId, BlockPos owner) {
@@ -26,17 +28,17 @@ public class BlockChunkLoaderImpl extends ChunkLoaderImpl<BlockPos> implements B
     }
 
     @Override
-    public TicketType<ChunkLoader<BlockPos>> createTicketType() {
-        return TicketType.create(getModId() + ":block_cl", Comparator.comparing(info -> info));
+    public TicketType<ChunkLoader<BlockPos>> getTicketType() {
+        return TICKET_TYPE;
     }
 
     @Override
     public boolean submitTicket(ServerLevel world) throws IllegalStateException {
-        if (loaded) {
+        if (isLoaded()) {
             return false;
 //            throw new IllegalStateException("Was asked to submit tickets for " + this + " in world " + level + ", but it already did!");
         } else {
-            world.getChunkSource().addRegionTicket(createTicketType(), getChunk(), 1, this);
+            world.getChunkSource().addRegionTicket(getTicketType(), getChunk(), 1, this);
             loaded = true;
             return true;
         }
@@ -44,11 +46,11 @@ public class BlockChunkLoaderImpl extends ChunkLoaderImpl<BlockPos> implements B
 
     @Override
     public boolean withdrawTicket(ServerLevel world) {
-        if (!loaded) {
+        if (!isLoaded()) {
             return false;
 //            SimpleChunkManagerImpl.LOGGER.warning("Was asked to withdraw ticket for " + this + " in world " + level + ", but it shouldn't have one!");
         } else {
-            world.getChunkSource().removeRegionTicket(createTicketType(), getChunk(), 1, this);
+            world.getChunkSource().removeRegionTicket(getTicketType(), getChunk(), 1, this);
             loaded = false;
             return true;
         }
@@ -62,5 +64,15 @@ public class BlockChunkLoaderImpl extends ChunkLoaderImpl<BlockPos> implements B
 
     public static BlockChunkLoader readSaveData(String id, CompoundTag data) {
         return new BlockChunkLoaderImpl(id, NbtUtils.readBlockPos(data.getCompound(BLOCK_POS_KEY)));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj instanceof BlockChunkLoader blockCl && getModId().equals(blockCl.getModId()) && getPos().equals(blockCl.getPos());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("BlockChunkLoader[modId='%s', pos=%s, loaded=%s]", getModId(), getPos(), isLoaded());
     }
 }
