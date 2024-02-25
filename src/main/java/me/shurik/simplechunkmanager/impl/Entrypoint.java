@@ -6,7 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 public class Entrypoint implements ModInitializer {
     @Override
     public void onInitialize() {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment())
+        if (FabricLoader.getInstance().isDevelopmentEnvironment() && FabricLoader.getInstance().isModLoaded("glimmer-command-builder"))
             ChunkManagerCommands.registerCommand();
     }
 }
