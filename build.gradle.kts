@@ -4,7 +4,7 @@ plugins {
     java
 }
 
-version = property("mod_version")!!
+version = "${property("mod_version")!!}-${property("minecraft_version")!!}"
 group = property("maven_group")!!
 
 repositories {
