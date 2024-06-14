@@ -142,6 +142,6 @@ public class SimpleChunkManagerImpl implements SimpleChunkManager {
      * @return Chunk loaders saved data accessor
      */
     private static ChunkLoadersSavedDataAccessor getChunkLoadersDataAccessor(ServerLevel level) {
-        return (ChunkLoadersSavedDataAccessor) level.getDataStorage().computeIfAbsent(ForcedChunksSavedData.factory(), "chunks");
+        return (ChunkLoadersSavedDataAccessor) level.getDataStorage().computeIfAbsent(ForcedChunksSavedData::load, ForcedChunksSavedData::new, "chunks");
     }
 }
